@@ -157,3 +157,18 @@ clean_rain_df <- read_precip_list %>%
 
 write_csv(clean_rain_df, here::here("2020", "2020-01-07","rainfall.csv"))
 ```
+
+Trying an alternative to getting rainfall and temperature data
+
+```{r}
+rainfall$rainfall <- as.integer(rainfall$rainfall)
+
+clean_rain_df <- rainfall %>%
+  group_by(station_code) %>%
+  group_by(year) %>%
+  summarise(yearly_rain = sum(rainfall$rainfall))
+```
+
+
+
+
