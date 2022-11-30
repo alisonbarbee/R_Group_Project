@@ -164,16 +164,10 @@ Trying an alternative to getting rainfall and temperature data
 rainfall$rainfall <- as.integer(rainfall$rainfall)
 
 clean_rain_df <- rainfall %>%
-  group_by(station_code, year) %>%
+  group_by(station_code, city_name, lat, long, station_name, year) %>%
   summarize(yearly_rain = sum(rainfall)) 
 
-rain_full <- rainfall
-
-rain_df_station <- inner_join(x = rain_full, y = clean_rain_df, by = "station_code")
-
-dim(clean_rain_df)
-dim(rainfall)
-dim(rain_full)
+write_csv(clean_rain_df, "clean_rain.csv")
 
 ```
 
