@@ -9,16 +9,9 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
-library(dplyr)
-perth_rain <- rainfall %>%
-  filter(city_name == "Perth")
-```
 
 ```{r, Alison}
 library(tidytuesdayR)
-
-
 ```
 
 
@@ -56,6 +49,7 @@ Example Plot
 
 library(sf)
 library(mapview)
+library(janitor)
 library(tidyverse)
 
 #' Current Incidents Feed (GeoJSON)
@@ -133,6 +127,8 @@ name_df <- tribble(
   "070351", "Canberra", -35.31, 149.2, "Canberra Airport",
   "086232", "Melbourne", -37.83, 144.98, "Melbourne Botanical Gardens"
 )
+
+write_csv(name_df, "station_names_locations.csv")
 
 read_precip_list <- list.files(here::here("2020", "2020-01-07")) %>% 
   .[str_detect(., "IDCJ")]
