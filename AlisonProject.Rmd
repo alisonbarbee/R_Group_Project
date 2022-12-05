@@ -210,9 +210,6 @@ ggplot() +
   geom_sf(data = oz_states) + 
   geom_sf(data = aus_fires, colour = "red") + 
   coord_sf()
-
-
-
 ```
 
 ```{r, Leaflet}
@@ -224,41 +221,69 @@ leaflet() %>%
 
 ```
 
-Example Plot
+```{r, Perth}
+library(leaflet)
 
-```{r}
-# Mapping NSW Current Incidents in R -------------------------------------------
+leaflet() %>% 
+  addTiles() %>% 
+  setView(115.79, -31.96, zoom = 6)
 
-library(sf)
-library(mapview)
-library(tidyverse)
+"Subiaco Wastewater Treatment Plant""
+```
 
-#' Current Incidents Feed (GeoJSON)
-#' This feed contains a list of current incidents from the NSW RFS, 
-#' and includes location data and Major Fire Update summary information where available. 
-#' Click through from the feed to the NSW RFS website for full details of the update. 
-#' GeoJSON is a lightweight data standard that has emerged to support the sharing of 
-#' information with location or geospatial data. 
-#' It is widely supported by modern applications and mobile devices.
+```{r, Adelaide}
+library(leaflet)
 
-url <- "http://www.rfs.nsw.gov.au/feeds/majorIncidents.json"
+leaflet() %>% 
+  addTiles() %>% 
+  setView(138.6, -34.92, zoom = 6)
+ 
+"North Adelaide"
 
-fires <- st_read(url)
+```
 
-fires
+```{r, Brisbane}
+library(leaflet)
 
-mapview(fires)
+leaflet() %>% 
+  addTiles() %>% 
+  setView(153.05, -27.51, zoom = 6)
 
-#' Hacky way to get rid of points within geometry collections
-fire_poly <- fires %>% 
-  st_buffer(dist = 0) %>% 
-  st_union(by_feature = TRUE)
+"Greenslopes Private Hospital"
 
-mapview(fire_poly)
+```
 
-fires %>% 
-  mutate(pubdate = as.character(pubDate),
-         pubdate = as.Date(pubdate))
+```{r, Brisbane2}
+library(leaflet)
+
+leaflet() %>% 
+  addTiles() %>% 
+  setView(153.04, -27.48, zoom = 6)
+
+"Brisbane"
+
+```
+
+```{r, Sydney}
+library(leaflet)
+
+leaflet() %>% 
+  addTiles() %>% 
+  setView(151.21, -33.86, zoom = 6)
+
+"Observatory Hill"
+
+```
+
+```{r, Canberra}
+library(leaflet)
+
+leaflet() %>% 
+  addTiles() %>% 
+  setView(149.2, -35.31, zoom = 6)
+
+"Canberra Airport"
+
 ```
 
 
