@@ -181,11 +181,16 @@ temperature$temperature <- as.integer(temperature$temperature)
 
 clean_temp_df <- temperature %>%
   group_by(city_name, temp_type, site_name) %>%
-  summarize(average_temp = mean(temperature)) 
+  summarize(average_temp = mean(temperature, na.rm = TRUE)) 
 
-write_csv(clean_rain_df, "clean_rain.csv")
+write_csv(clean_temp_df, "clean_temp.csv")
 ```
 
 dygraphs package?
+cross talk?
+popups?
+
+map color code by type of fire?
+size by brightness?
 
 
