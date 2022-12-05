@@ -167,10 +167,10 @@ fires %>%
 
 ```{r}
 aus_stations <- name_df %>%
-  select(station_code, city_name, lat, long, station_name)
+  dplyr::select(station_code, city_name, lat, long, station_name)
 
 aus_stations <- st_as_sf(aus_stations, coords = c("lat", "long")) %>%
-  st_crs()
+  st_set_crs(4283)
 
 ```
 
@@ -178,16 +178,23 @@ aus_stations <- st_as_sf(aus_stations, coords = c("lat", "long")) %>%
 library(sf)
 
 aus_fires <- nasa_fire %>%
-  select(latitude, longitude, brightness, acq_date)
+  dplyr::select(latitude, longitude, brightness, acq_date)
 
-aus_fires <- st_as_sf(aus_fires, coords = c("latitude", "longitude")) %>%
-  st_set_crs()
+aus_fires <- st_as_sf(aus_fires, coords = c("longitude", "latitude")) %>%
+  st_set_crs(4283)
 
 
 ```
 
+```{r, stations}
 
-```{r, Australia}
+ggplot() + 
+  geom_sf(data = oz_states) + 
+  geom_sf(data = aus_fires, colour = "red") + 
+  coord_sf()
+```
+
+```{r, Australia fires}
 library(sf)
 library(tigris)
 library(ggplot2)
@@ -197,30 +204,28 @@ library(ozmaps)
 
 oz_states <- ozmaps::ozmap_states
 
-ggplot() + 
-  geom_sf(data = oz_states) +
-  coord_sf()
+
 
 ggplot() + 
   geom_sf(data = oz_states) + 
-  geom_point(data = aus_fires, mapping = aes(x = lon, y = lat), colour = "red") + 
+  geom_sf(data = aus_fires, colour = "red") + 
   coord_sf()
 
 
-  geom_sf(data = aus_fires, mapping = aes(color = "blue", 
-                                          fill = "cyan", 
-                                          stat = "sf"))
 
 ```
 
-```{r}
+```{r, Leaflet}
+library(leaflet)
 
+leaflet() %>% 
+  addTiles() %>% 
+  setView(130, -25, zoom = 4)
 
 ```
-
-
 
 Example Plot
+
 ```{r}
 # Mapping NSW Current Incidents in R -------------------------------------------
 
@@ -257,5 +262,8 @@ fires %>%
 ```
 
 
+```{r}
+write_csv(aus_stations, "aus_stations.csv")
+```
 
 
