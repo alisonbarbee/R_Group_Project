@@ -163,13 +163,23 @@ Trying an alternative to getting rainfall and temperature data
 Rainfall
 
 ```{r}
+library(lubridate)
+
 rainfall$rainfall <- as.integer(rainfall$rainfall)
+
+rainfall
 
 clean_rain_df <- rainfall %>%
   group_by(station_code, city_name, lat, long, station_name, year) %>%
   summarize(yearly_rain = sum(rainfall)) 
 
 write_csv(clean_rain_df, "clean_rain.csv")
+
+clean_rain_df_2 <- rainfall %>%
+  mutate(date = paste(year, month, day, sep = "-")) %>%
+  mutate(date_date = ymd(date))
+
+clean_rain_df_2
 ```
 
 
@@ -177,11 +187,15 @@ write_csv(clean_rain_df, "clean_rain.csv")
 Temperature
 
 ```{r}
+
 temperature$temperature <- as.integer(temperature$temperature)
 
+temperature
+
 clean_temp_df <- temperature %>%
-  group_by(city_name, temp_type, site_name) %>%
-  summarize(average_temp = mean(temperature, na.rm = TRUE)) 
+  group_by(city_name, temp_type, site_name, date) %>%
+  summarize(average_temp = mean(temperature, na.rm = TRUE)) %>%
+  pivot_wider(names_from = temp_type, values_from = average_temp)
 
 write_csv(clean_temp_df, "clean_temp.csv")
 ```
