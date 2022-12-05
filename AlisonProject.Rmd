@@ -14,7 +14,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r, Alison}
 library(tidytuesdayR)
 
-
 ```
 
 
@@ -51,41 +50,6 @@ rainfall <- tuesdata$rainfall
 ```
 
 
-Example Plot
-```{r}
-# Mapping NSW Current Incidents in R -------------------------------------------
-
-library(sf)
-library(mapview)
-library(tidyverse)
-
-#' Current Incidents Feed (GeoJSON)
-#' This feed contains a list of current incidents from the NSW RFS, 
-#' and includes location data and Major Fire Update summary information where available. 
-#' Click through from the feed to the NSW RFS website for full details of the update. 
-#' GeoJSON is a lightweight data standard that has emerged to support the sharing of 
-#' information with location or geospatial data. 
-#' It is widely supported by modern applications and mobile devices.
-
-url <- "http://www.rfs.nsw.gov.au/feeds/majorIncidents.json"
-
-fires <- st_read(url)
-
-fires
-
-mapview(fires)
-
-#' Hacky way to get rid of points within geometry collections
-fire_poly <- fires %>% 
-  st_buffer(dist = 0) %>% 
-  st_union(by_feature = TRUE)
-
-mapview(fire_poly)
-
-fires %>% 
-  mutate(pubdate = as.character(pubDate),
-         pubdate = as.Date(pubdate))
-```
 
 Cleaning Data
 ```{r}
@@ -163,6 +127,7 @@ clean_rain_df <- read_precip_list %>%
 write_csv(clean_rain_df, here::here("2020", "2020-01-07","rainfall.csv"))
 ```
 
+
 ```{r}
 library(plyr)
 library(dplyr)
@@ -171,7 +136,6 @@ library(rgdal)
 library(tmap)
 library(ggmap)
 library(dplyr)
-library(sf)
 library(ggspatial)
 library(rlang)
 library(broom)
@@ -179,7 +143,7 @@ library(tidyverse)
 library(readxl)
 library(purrr)
 
-library(ozmap)
+library(ozmaps)
 
 url <- "http://www.rfs.nsw.gov.au/feeds/majorIncidents.json"
 
@@ -205,7 +169,20 @@ fires %>%
 aus_stations <- name_df %>%
   select(station_code, city_name, lat, long, station_name)
 
-aus_stations <- st_as_sf(aus_stations, coords = c("lat", "long"))
+aus_stations <- st_as_sf(aus_stations, coords = c("lat", "long")) %>%
+  st_crs()
+
+```
+
+```{r}
+library(sf)
+
+aus_fires <- nasa_fire %>%
+  select(latitude, longitude, brightness, acq_date)
+
+aus_fires <- st_as_sf(aus_fires, coords = c("latitude", "longitude")) %>%
+  st_set_crs()
+
 
 ```
 
@@ -221,23 +198,63 @@ library(ozmaps)
 oz_states <- ozmaps::ozmap_states
 
 ggplot() + 
-  geom_sf(data = oz_states, color = "lightgray") + 
-  coord_sf() +
-  geom_sf(data = aus_stations, mapping = aes(color = "blue", 
+  geom_sf(data = oz_states) +
+  coord_sf()
+
+ggplot() + 
+  geom_sf(data = oz_states) + 
+  geom_point(data = aus_fires, mapping = aes(x = lon, y = lat), colour = "red") + 
+  coord_sf()
+
+
+  geom_sf(data = aus_fires, mapping = aes(color = "blue", 
                                           fill = "cyan", 
                                           stat = "sf"))
 
 ```
 
 ```{r}
-australia <- map(data = oz_states, plot = FALSE, fill = TRUE) %>% 
-  st_as_sf()
+
 
 ```
 
 
 
+Example Plot
+```{r}
+# Mapping NSW Current Incidents in R -------------------------------------------
 
+library(sf)
+library(mapview)
+library(tidyverse)
+
+#' Current Incidents Feed (GeoJSON)
+#' This feed contains a list of current incidents from the NSW RFS, 
+#' and includes location data and Major Fire Update summary information where available. 
+#' Click through from the feed to the NSW RFS website for full details of the update. 
+#' GeoJSON is a lightweight data standard that has emerged to support the sharing of 
+#' information with location or geospatial data. 
+#' It is widely supported by modern applications and mobile devices.
+
+url <- "http://www.rfs.nsw.gov.au/feeds/majorIncidents.json"
+
+fires <- st_read(url)
+
+fires
+
+mapview(fires)
+
+#' Hacky way to get rid of points within geometry collections
+fire_poly <- fires %>% 
+  st_buffer(dist = 0) %>% 
+  st_union(by_feature = TRUE)
+
+mapview(fire_poly)
+
+fires %>% 
+  mutate(pubdate = as.character(pubDate),
+         pubdate = as.Date(pubdate))
+```
 
 
 
