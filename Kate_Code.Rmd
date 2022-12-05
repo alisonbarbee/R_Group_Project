@@ -160,6 +160,8 @@ write_csv(clean_rain_df, here::here("2020", "2020-01-07","rainfall.csv"))
 
 Trying an alternative to getting rainfall and temperature data
 
+Rainfall
+
 ```{r}
 rainfall$rainfall <- as.integer(rainfall$rainfall)
 
@@ -168,9 +170,22 @@ clean_rain_df <- rainfall %>%
   summarize(yearly_rain = sum(rainfall)) 
 
 write_csv(clean_rain_df, "clean_rain.csv")
-
 ```
 
 
+
+Temperature
+
+```{r}
+temperature$temperature <- as.integer(temperature$temperature)
+
+clean_temp_df <- temperature %>%
+  group_by(city_name, temp_type, site_name) %>%
+  summarize(average_temp = mean(temperature)) 
+
+write_csv(clean_rain_df, "clean_rain.csv")
+```
+
+dygraphs package?
 
 
