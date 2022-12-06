@@ -286,6 +286,17 @@ leaflet() %>%
 
 ```
 
+```{r, Melbourne}
+library(leaflet)
+
+leaflet() %>% 
+  addTiles() %>% 
+  setView(144.98, -37.83, zoom = 6)
+
+"Melbourne Botanical Gardens"
+
+```
+
 
 ```{r}
 write_csv(aus_stations, "aus_stations.csv")

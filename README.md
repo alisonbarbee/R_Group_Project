@@ -5,7 +5,9 @@ Australian Wildfires
 Alison = map of the fire shapes in Australia 
 - Australia map 
 - use leaflet and create the icon as fire
-raster package**
+- Create maps for each station in leaflet and send to Keke
+
+
 - 'crosstalk' between the map and the table or we can put metadata on the 
 prescribed burns vs a wildfire on the popup in the map
 
