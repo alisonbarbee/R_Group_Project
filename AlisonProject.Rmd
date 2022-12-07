@@ -169,7 +169,7 @@ fires %>%
 aus_stations <- name_df %>%
   dplyr::select(station_code, city_name, lat, long, station_name)
 
-aus_stations <- st_as_sf(aus_stations, coords = c("lat", "long")) %>%
+aus_stations <- st_as_sf(aus_stations, coords = c("long", "lat")) %>%
   st_set_crs(4283)
 
 ```
@@ -177,21 +177,18 @@ aus_stations <- st_as_sf(aus_stations, coords = c("lat", "long")) %>%
 ```{r}
 library(sf)
 
-aus_fires <- nasa_fire %>%
+aus_fires1 <- nasa_fire %>%
   dplyr::select(latitude, longitude, brightness, acq_date)
 
-aus_fires <- st_as_sf(aus_fires, coords = c("longitude", "latitude")) %>%
+aus_fires <- st_as_sf(aus_fires1, coords = c("longitude", "latitude")) %>%
   st_set_crs(4283)
 
 
 ```
 
-```{r, stations}
+```{r}
 
-ggplot() + 
-  geom_sf(data = oz_states) + 
-  geom_sf(data = aus_fires, colour = "red") + 
-  coord_sf()
+
 ```
 
 ```{r, Australia fires}
@@ -204,12 +201,14 @@ library(ozmaps)
 
 oz_states <- ozmaps::ozmap_states
 
-
-
 ggplot() + 
   geom_sf(data = oz_states) + 
-  geom_sf(data = aus_fires, colour = "red") + 
+  geom_sf(data = aus_fires, colour = "red", opacity = aus_fires1$brightness) +
+  geom_sf(data = aus_stations, colour = "blue", size = 3) + 
   coord_sf()
+
+# make a function for the colors in order to vary
+#add labels on the stations
 ```
 
 ```{r, Leaflet}
@@ -217,84 +216,83 @@ library(leaflet)
 
 leaflet() %>% 
   addTiles() %>% 
-  setView(130, -25, zoom = 4)
+  setView(130, -25, zoom = 4) %>%
+  addMarkers(115.79, -31.96, popup = "Subiaco Wastewater Treatment Plant, Perth") %>%
+  addMarkers(138.6, -34.92, popup = "North Adelaide, Adelaide") %>%
+  addMarkers(153.05, -27.51, popup = "Greenslopes Private Hospital, Brisbane") %>%
+  addMarkers(153.04, -27.48, popup = "Brisbane Station, Brisbane") %>%
+  addMarkers(151.21, -33.86, popup = "Observatory Hill, Sydney") %>%
+  addMarkers(149.2, -35.31, popup = "Canberra Airport, Canberra") %>%
+  addMarkers(144.98, -37.83, popup = "Melbourne Botanical Gardens, Melbourne") %>%
+  addCircles(data = aus_fires1, color = "red", popup = "fire",
+             fillOpacity = 0.25, radius = 30000) 
+  
+  addMarkers(clusterOptions = markerClusterOptions(aus_fires1))
+  
+
 
 ```
 
 ```{r, Perth}
-library(leaflet)
-
 leaflet() %>% 
   addTiles() %>% 
   setView(115.79, -31.96, zoom = 6) %>%
-  addMarkers(115.79, -31.96, popup = "Subiaco Wastewater Treatment Plant")
-
+  addMarkers(115.79, -31.96, popup = "Subiaco Wastewater Treatment Plant") %>%
+  addCircles(data = aus_fires1, color = "red", fillOpacity = 0.2, radius = 10000)
 
 ```
 
 ```{r, Adelaide}
-library(leaflet)
-
 leaflet() %>% 
   addTiles() %>% 
   setView(138.6, -34.92, zoom = 6) %>%
-  addMarkers(138.6, -34.92, popup = "North Adelaide")
+  addMarkers(138.6, -34.92, popup = "North Adelaide") %>%
+  addCircles(data = aus_fires1, color = "red", fillOpacity = 0.2, radius = 10000)
  
-
 ```
 
 ```{r, Brisbane}
-library(leaflet)
-
 leaflet() %>% 
   addTiles() %>% 
   setView(153.05, -27.51, zoom = 6) %>%
-  addMarkers(153.05, -27.51, popup = "Greenslopes Private Hospital")
-
+  addMarkers(153.05, -27.51, popup = "Greenslopes Private Hospital") %>%
+  addCircles(data = aus_fires1, color = "red", fillOpacity = 0.2, radius = 10000)
 
 ```
 
 ```{r, Brisbane2}
-library(leaflet)
-
 leaflet() %>% 
   addTiles() %>% 
   setView(153.04, -27.48, zoom = 6) %>%
-  addMarkers(153.04, -27.48, popup = "Brisbane")
-
+  addMarkers(153.04, -27.48, popup = "Brisbane") %>%
+  addCircles(data = aus_fires1, color = "red", fillOpacity = 0.2, radius = 10000)
 
 ```
 
 ```{r, Sydney}
-library(leaflet)
-
 leaflet() %>% 
   addTiles() %>% 
   setView(151.21, -33.86, zoom = 6) %>%
-  addMarkers(151.21, -33.86, popup = "Observatory Hill")
-
+  addMarkers(151.21, -33.86, popup = "Observatory Hill") %>%
+  addCircles(data = aus_fires1, color = "red", fillOpacity = 0.2, radius = 10000)
 
 ```
 
 ```{r, Canberra}
-library(leaflet)
-
 leaflet() %>% 
   addTiles() %>% 
   setView(149.2, -35.31, zoom = 6) %>%
-  addMarkers(149.2, -35.31, popup = "Canberra Airport")
-
+  addMarkers(149.2, -35.31, popup = "Canberra Airport") %>%
+  addCircles(data = aus_fires1, color = "red", fillOpacity = 0.2, radius = 10000)
 
 ```
 
 ```{r, Melbourne}
-library(leaflet)
-
 leaflet() %>% 
   addTiles() %>%  
   setView(144.98, -37.83, zoom = 6) %>%
-  addMarkers(144.98, -37.83, popup = "Melbourne Botanical Gardens")
-
+  addMarkers(144.98, -37.83, popup = "Melbourne Botanical Gardens") %>%
+  addCircles(data = aus_fires1, color = "red", fillOpacity = 0.2, radius = 10000)
 
 ```
 
