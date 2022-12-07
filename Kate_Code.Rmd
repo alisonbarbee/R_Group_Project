@@ -220,11 +220,14 @@ rain_plot
 clean_rain_df_2
 clean_temp_df
 
+class(clean_rain_df$year)
+clean_rain_df$year <- as.integer(clean_rain_df$year)
+
 rain_plot <- clean_rain_df %>%
   ggplot() +
   geom_smooth(aes(x = year, y = yearly_rain)) +
   facet_wrap(vars(city_name)) +
-  theme_classic()
+  theme_classic() + ylab("Total Yearly Rain (cm)") + ylim(0, 2000)
 
 rain_plot
 
@@ -235,12 +238,14 @@ ggplotly(rain_plot)
 
 
 ```{r}
+class(clean_temp_df)
+
 temp_plot <- clean_temp_df %>%
   ggplot() +
   geom_smooth(aes(x = date, y = max), color = "red") +
   geom_smooth(aes(x = date, y = min), color = "orange") +
   facet_wrap(vars(city_name)) +
-  theme_classic()
+  theme_classic() + ylab("Max and Min Temp (C)") + xlab("Year")
 
 temp_plot
 
@@ -250,17 +255,31 @@ ggplotly(temp_plot)
 
 Add a zoomed in plot of the last 20 years of rainfall.
 
+(consider transforming (add .1 to get rid of NA values), add back daily data)
+
 ```{r}
 clean_rain_df_sub <- clean_rain_df %>%
-  filter(year > 2000)
+  filter(year > 2000) %>%
+#  filter(city_name != "Adelaide") %>%
+  mutate(rain_trans = yearly_rain + 1)
 
 rain_plot_sub <- clean_rain_df_sub %>%
   ggplot() +
-  geom_smooth(aes(x = year, y = yearly_rain)) +
+  geom_smooth(aes(x = year, y = rain_trans)) +
   facet_wrap(vars(city_name)) +
-  theme_classic()
+  theme_classic() + ylab("Total Yearly Rain (cm)") + ylim(0, 2000)
+
+rain_plot_sub
 
 ggplotly(rain_plot_sub)
 ```
+
+Zoomed in Plot of temperature
+
+```{r}
+
+```
+
+
 
 
