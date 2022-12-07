@@ -226,9 +226,10 @@ library(leaflet)
 
 leaflet() %>% 
   addTiles() %>% 
-  setView(115.79, -31.96, zoom = 6)
+  setView(115.79, -31.96, zoom = 6) %>%
+  addMarkers(115.79, -31.96, popup = "Subiaco Wastewater Treatment Plant")
 
-"Subiaco Wastewater Treatment Plant""
+
 ```
 
 ```{r, Adelaide}
@@ -236,9 +237,9 @@ library(leaflet)
 
 leaflet() %>% 
   addTiles() %>% 
-  setView(138.6, -34.92, zoom = 6)
+  setView(138.6, -34.92, zoom = 6) %>%
+  addMarkers(138.6, -34.92, popup = "North Adelaide")
  
-"North Adelaide"
 
 ```
 
@@ -247,9 +248,9 @@ library(leaflet)
 
 leaflet() %>% 
   addTiles() %>% 
-  setView(153.05, -27.51, zoom = 6)
+  setView(153.05, -27.51, zoom = 6) %>%
+  addMarkers(153.05, -27.51, popup = "Greenslopes Private Hospital")
 
-"Greenslopes Private Hospital"
 
 ```
 
@@ -258,9 +259,9 @@ library(leaflet)
 
 leaflet() %>% 
   addTiles() %>% 
-  setView(153.04, -27.48, zoom = 6)
+  setView(153.04, -27.48, zoom = 6) %>%
+  addMarkers(153.04, -27.48, popup = "Brisbane")
 
-"Brisbane"
 
 ```
 
@@ -269,9 +270,9 @@ library(leaflet)
 
 leaflet() %>% 
   addTiles() %>% 
-  setView(151.21, -33.86, zoom = 6)
+  setView(151.21, -33.86, zoom = 6) %>%
+  addMarkers(151.21, -33.86, popup = "Observatory Hill")
 
-"Observatory Hill"
 
 ```
 
@@ -280,9 +281,9 @@ library(leaflet)
 
 leaflet() %>% 
   addTiles() %>% 
-  setView(149.2, -35.31, zoom = 6)
+  setView(149.2, -35.31, zoom = 6) %>%
+  addMarkers(149.2, -35.31, popup = "Canberra Airport")
 
-"Canberra Airport"
 
 ```
 
@@ -290,10 +291,10 @@ leaflet() %>%
 library(leaflet)
 
 leaflet() %>% 
-  addTiles() %>% 
-  setView(144.98, -37.83, zoom = 6)
+  addTiles() %>%  
+  setView(144.98, -37.83, zoom = 6) %>%
+  addMarkers(144.98, -37.83, popup = "Melbourne Botanical Gardens")
 
-"Melbourne Botanical Gardens"
 
 ```
 
