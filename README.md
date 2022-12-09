@@ -1,6 +1,19 @@
-# R_Group_Project
+# **R_Group_Project**
+Alison Barbee, Kate Bazany, and Keke Chukwudi
+R Programming Course
+Dec. 14th, 2022
 
-Australian Wildfires
+## *The Data*
+
+This data was pulled from...
+
+## *Australian Wildfires*
+
+The maps show...
+
+The faceted graphs show...
+
+## *Notes*
 
 Alison = map of the fire shapes in Australia 
 - Australia map 
@@ -19,3 +32,10 @@ Kate = time series of rainfall and temperature at different stations
 Keke = looking at scatter plot of long and lat of rainfall
 - percipitation 
 - table:  
+
+
+
+## *Links*
+
+
+The original GitHub repository:
