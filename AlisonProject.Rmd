@@ -227,9 +227,8 @@ leaflet() %>%
   addCircles(data = aus_fires1, color = "red", popup = "fire",
              fillOpacity = 0.25, radius = 30000) 
   
-  addMarkers(clusterOptions = markerClusterOptions(aus_fires1))
-  
 
+ #trying to add addMarkers(clusterOptions = markerClusterOptions(aus_fires1))
 
 ```
 
