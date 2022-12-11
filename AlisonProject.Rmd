@@ -186,10 +186,7 @@ aus_fires <- st_as_sf(aus_fires1, coords = c("longitude", "latitude")) %>%
 
 ```
 
-```{r}
 
-
-```
 
 ```{r, Australia fires}
 library(sf)
@@ -205,7 +202,11 @@ ggplot() +
   geom_sf(data = oz_states) + 
   geom_sf(data = aus_fires, colour = "red", opacity = aus_fires1$brightness) +
   geom_sf(data = aus_stations, colour = "blue", size = 3) + 
-  coord_sf()
+  ggtitle("Australia Fires During the Week of Dec. 29th, 2019 - Jan. 5th, 2020") +
+  xlab("Longitude") + ylab("Latitiude") +
+  geom_text(label = aus_stations$station_name) +
+  coord_sf() +
+  theme_bw()
 
 # make a function for the colors in order to vary
 #add labels on the stations
@@ -227,9 +228,17 @@ leaflet() %>%
   addCircles(data = aus_fires1, color = "red", popup = "fire",
              fillOpacity = 0.25, radius = 30000) 
   
+```
 
- #trying to add addMarkers(clusterOptions = markerClusterOptions(aus_fires1))
+```{r ClusterOptions}
 
+# Trying to add ClusterOptions to fire data points, but rendering time takes a long time
+
+leaflet() %>% 
+  addTiles() %>% 
+  setView(130, -25, zoom = 4) %>%
+  addMarkers(aus_fires1, lat = aus_fires1$latitude, lng = aus_fires1$longitude, 
+             markerClusterOptions())
 ```
 
 ```{r, Perth}
@@ -247,7 +256,8 @@ leaflet() %>%
   setView(138.6, -34.92, zoom = 6) %>%
   addMarkers(138.6, -34.92, popup = "North Adelaide") %>%
   addCircles(data = aus_fires1, color = "red", fillOpacity = 0.2, radius = 10000)
- 
+
+#trying to add popup in addCircles popup = paste0("<img src = ", file, ">"))
 ```
 
 ```{r, Brisbane}
