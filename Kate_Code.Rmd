@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-```{r, Alison}
+```{r, Kate}
 library(tidytuesdayR)
 ```
 
@@ -44,6 +44,7 @@ rainfall <- tuesdata$rainfall
 ```
 
 Example Plot
+
 ```{r}
 # Mapping NSW Current Incidents in R -------------------------------------------
 
@@ -81,6 +82,7 @@ fires %>%
 ```
 
 Cleaning Data
+
 ```{r}
 library(tidyverse)
 library(here)
@@ -181,6 +183,11 @@ clean_rain_df_2 <- rainfall %>%
 
 clean_rain_df_2
 write_csv(clean_rain_df_2, "clean_rain_df_d.csv")
+
+clean_rain_df_all <- rainfall %>%
+  mutate(date = paste(year, month, day, sep = "-"))
+clean_rain_df_all$date <- ymd(clean_rain_df_all$date)
+clean_rain_df_all
 ```
 
 
@@ -188,6 +195,7 @@ write_csv(clean_rain_df_2, "clean_rain_df_d.csv")
 Temperature
 
 ```{r}
+library(tidyverse)
 
 temperature$temperature <- as.integer(temperature$temperature)
 
@@ -199,6 +207,10 @@ clean_temp_df <- temperature %>%
   pivot_wider(names_from = temp_type, values_from = average_temp)
 
 write_csv(clean_temp_df, "clean_temp.csv")
+
+clean_temp_df_all <- temperature %>% 
+  pivot_wider(names_from = temp_type, values_from = temperature)
+clean_temp_df_all
 ```
 
 dygraphs package?
@@ -264,7 +276,8 @@ clean_rain_df_sub <- clean_rain_df %>%
   mutate(rain_trans = yearly_rain + 1)
 
 rain_plot_sub <- clean_rain_df_sub %>%
-  ggplot() +
+  ggplot() + 
+  geom_vline(xintercept = 2019.94, color = "red", size = 1.2, alpha = .8) +
   geom_smooth(aes(x = year, y = rain_trans)) +
   facet_wrap(vars(city_name)) +
   theme_classic() + ylab("Total Yearly Rain (cm)") + ylim(0, 2000)
@@ -277,9 +290,45 @@ ggplotly(rain_plot_sub)
 Zoomed in Plot of temperature
 
 ```{r}
+temperature
+rainfall
+```
+
+Zoomed in Plot of Rainfall
+
+```{r}
 
 ```
 
 
+Full temperature plot
+
+```{r}
+library(ggplot2)
+library(dplyr)
+temp_plot_full <- clean_temp_df_all %>%
+  ggplot() +
+#  geom_vline(xintercept = 2020, color = "red", size = 1.2, alpha = .8) +
+  geom_point(aes(x = date, y = max), size = .1, alpha = .05, color = "red") +
+  geom_point(aes(x = date, y = min), size = .1, alpha = .05, color = "orange") +
+#  geom_smooth(aes(x = date, y = max), color = "red") +
+#  geom_smooth(aes(x = date, y = min), color = "orange") +
+  facet_wrap(vars(city_name)) +
+  theme_classic() + ylab("Max and Min Temp (C)") + xlab("Year")
+
+temp_plot_full
+```
+
+Full Rainfall Plot
+
+```{r}
+clean_rain_df_all
+rain_plot_full <- clean_rain_df_all %>%
+  ggplot() +
+  geom_point(aes(x = date, y = rainfall), color = "blue", alpha = .05, size = .1) +
+  facet_wrap(vars(city_name)) +
+  theme_classic() + ylab("Rainfall (cm)")
+rain_plot_full
+```
 
 
