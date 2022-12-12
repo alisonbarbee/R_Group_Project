@@ -51,7 +51,7 @@ rainfall <- tuesdata$rainfall
 
 
 
-Cleaning Data
+*Cleaning Data*
 ```{r}
 library(tidyverse)
 library(here)
@@ -145,6 +145,9 @@ library(purrr)
 
 library(ozmaps)
 
+#Feel free to ignore the following code I was going to use for ggplot maps 
+# but didn't end up using
+
 url <- "http://www.rfs.nsw.gov.au/feeds/majorIncidents.json"
 
 fires <- st_read(url)
@@ -165,7 +168,11 @@ fires %>%
          pubdate = as.Date(pubdate))
 ```
 
+Begin the process of making the maps on ggplot and leaflet
+
 ```{r}
+# creates the datatable for the Australian weather stations
+
 aus_stations <- name_df %>%
   dplyr::select(station_code, city_name, lat, long, station_name)
 
@@ -175,6 +182,14 @@ aus_stations <- st_as_sf(aus_stations, coords = c("long", "lat")) %>%
 ```
 
 ```{r}
+# This csv will serve as the table we will use for the Australian weather stations 
+
+write_csv(aus_stations, "aus_stations.csv")
+```
+
+```{r}
+# Creates the datasets that will be used for creating the ggplot and leaflet maps
+
 library(sf)
 
 aus_fires1 <- nasa_fire %>%
@@ -183,9 +198,7 @@ aus_fires1 <- nasa_fire %>%
 aus_fires <- st_as_sf(aus_fires1, coords = c("longitude", "latitude")) %>%
   st_set_crs(4283)
 
-
 ```
-
 
 
 ```{r, Australia fires}
@@ -210,7 +223,7 @@ ggplot() +
   coord_sf() +
   theme_bw()
 
-# make a function for the colors in order to vary
+# Need to make a function for the colors in order to vary
 #add labels on the stations
 ```
 
@@ -245,7 +258,12 @@ leaflet() %>%
              markerClusterOptions())
 ```
 
+Below is the code for leaflet maps around the weather stations throughout Australia
+
 ```{r, Perth}
+# This code will generate a leaflet map of the Perth weather station with the 
+# data points of all fires within a week 
+
 leaflet() %>% 
   addTiles() %>% 
   setView(115.79, -31.96, zoom = 6) %>%
@@ -255,6 +273,9 @@ leaflet() %>%
 ```
 
 ```{r, Adelaide}
+# This code will generate a leaflet map of the Adelaide weather station with the 
+# data points of all fires within a week 
+
 leaflet() %>% 
   addTiles() %>% 
   setView(138.6, -34.92, zoom = 6) %>%
@@ -265,6 +286,9 @@ leaflet() %>%
 ```
 
 ```{r, Brisbane}
+# This code will generate a leaflet map of the Brisbane weather station with the 
+# data points of all fires within a week 
+
 leaflet() %>% 
   addTiles() %>% 
   setView(153.05, -27.51, zoom = 6) %>%
@@ -274,6 +298,9 @@ leaflet() %>%
 ```
 
 ```{r, Brisbane2}
+# This code will generate a leaflet map of the second Brisbane weather station with the 
+# data points of all fires within a week 
+
 leaflet() %>% 
   addTiles() %>% 
   setView(153.04, -27.48, zoom = 6) %>%
@@ -283,6 +310,9 @@ leaflet() %>%
 ```
 
 ```{r, Sydney}
+# This code will generate a leaflet map of the Sydney weather station with the 
+# data points of all fires within a week 
+
 leaflet() %>% 
   addTiles() %>% 
   setView(151.21, -33.86, zoom = 6) %>%
@@ -292,6 +322,9 @@ leaflet() %>%
 ```
 
 ```{r, Canberra}
+# This code will generate a leaflet map of the Canberra weather station with the 
+# data points of all fires within a week 
+
 leaflet() %>% 
   addTiles() %>% 
   setView(149.2, -35.31, zoom = 6) %>%
@@ -301,6 +334,9 @@ leaflet() %>%
 ```
 
 ```{r, Melbourne}
+# This code will generate a leaflet map of the Melbourne weather station with the 
+# data points of all fires within a week 
+
 leaflet() %>% 
   addTiles() %>%  
   setView(144.98, -37.83, zoom = 6) %>%
@@ -309,9 +345,5 @@ leaflet() %>%
 
 ```
 
-
-```{r}
-write_csv(aus_stations, "aus_stations.csv")
-```
 
 
