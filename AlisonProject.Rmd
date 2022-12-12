@@ -189,6 +189,8 @@ aus_fires <- st_as_sf(aus_fires1, coords = c("longitude", "latitude")) %>%
 
 
 ```{r, Australia fires}
+# This code will generate a ggplot map of Australia which includes data points of all fires within a week as well as the weather stations
+
 library(sf)
 library(tigris)
 library(ggplot2)
@@ -213,6 +215,8 @@ ggplot() +
 ```
 
 ```{r, Leaflet}
+# This code will generate a leaflet map of Australia which includes data points of all fires within a week as well as the weather stations
+
 library(leaflet)
 
 leaflet() %>% 
