@@ -415,7 +415,7 @@ rain_plot_monthly <- clean_rain_df_3 %>%
              color = "blue", alpha = .8, size = .1) + 
   geom_smooth(aes(x = year_month, y = monthly_rain), color = "black") +
   facet_wrap(vars(city_name)) +
-  theme_classic() + ylab("Monthly Rainfall (cm)")
+  theme_classic() + ylab("Total Monthly Rainfall (cm)") + xlab("Date")
 rain_plot_monthly
 
 ```
