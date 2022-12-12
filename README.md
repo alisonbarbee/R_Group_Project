@@ -11,7 +11,9 @@ This data was pulled from...
 
 The maps show...
 
-The faceted graphs show...
+The faceted temperature graphs show daily maximum and minimum temperatures (in degrees Celcius) at each weather station from 2010 to 2020. Seasonal variation patterns are clear. Trend lines were added with geom_smooth. This graph shows slight increases in temperature at most stations over the last ten years, but no major noticeable heatwave events.
+
+The faceted rainfall graphs show the monthly total rainfall (in centemeters) collected at each weather station from 2010 to 2020. These rainfall plots indicate that there were slightly decreases in monthly total rainfall in the years leading up to the fire events in the last week of 2019 and first week of 2020.
 
 ## *Notes*
 
