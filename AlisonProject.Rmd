@@ -172,6 +172,7 @@ Begin the process of making the maps on ggplot and leaflet
 
 ```{r}
 # creates the datatable for the Australian weather stations
+library(sf)
 
 aus_stations <- name_df %>%
   dplyr::select(station_code, city_name, lat, long, station_name)
