@@ -1,0 +1,94 @@
+---
+title: "Austrailian wild fires"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(here)
+library(plyr)
+library(dplyr)
+library(ggplot2)
+library(rgdal)
+library(tmap)
+library(ggmap)
+library(dplyr)
+library(ggspatial)
+library(broom)
+library(tidyverse)
+library(readxl)
+library(purrr)
+library(sf)
+library(ozmaps)
+library(mapview)
+library(plotly)
+library(lubridate)
+library(shiny)
+clean_temp<-read_csv("clean_temp.csv")
+rain_df<-read_csv ("clean_rain_df_d.csv")
+rain_df<-unite(rain_df, col='date', c('year', 'month','day'), sep=',')
+url <- "http://www.rfs.nsw.gov.au/feeds/majorIncidents.json"
+```
+
+
+Inputs {.sidebar}
+-----------------------------------------------------------------------
+
+```{r}
+selectInput("city_name", label = 'Select a city to display', 
+            choices =c("Adelaide", "Brisbane", "Melbourne",                                           "Perth","Sydney"))
+
+```
+Select a city to display 
+
+Use the _Explore city_ to explore Australia's wild fire for your chosen city in 2020.  
+
+Application Authors: Alison, Kate, Keke Chukwudi 
+
+Data source: (http://www.bom.gov.au/?ref=logo) Bureau of Metrology, Australia
+
+
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Rain fall plot
+
+```{r}
+clean_rain_df<-rain_df %>%
+  mutate(date = ymd(date)) %>%
+  group_by(date = floor_date(date, 'month')) %>%
+dplyr::summarize(rainfall = sum(rainfall))
+
+rain_plot <- clean_rain_df %>%
+  ggplot(aes(x = date, y = rainfall)) +
+  geom_point(alpha = 0.5, size = 0.5) + geom_smooth() + ylab("Total monthly Rain (cm)") + ylim (0, 2000)
+
+ggplotly(rain_plot)
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Temperature plot
+
+```{r}
+temp_plot <- clean_temp %>%
+  ggplot() +
+  geom_smooth(aes(x = date, y = max), color = "red") +
+  geom_smooth(aes(x = date, y = min), color = "orange") +
+  theme_classic() + ylab("Max and Min Temp (C)") + xlab("Year")
+
+ggplotly(temp_plot)
+```
+
+### Map of Australian wild fire 
+
+```{r}
+
+```
+
