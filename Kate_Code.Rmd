@@ -319,6 +319,30 @@ temp_plot_full <- clean_temp_df_all %>%
 temp_plot_full
 ```
 
+Temperature (Last 10 Years)
+
+```{r}
+clean_temp_df_all$year <- substr(clean_temp_df_all$date, 1, 4)
+
+clean_temp_df_10 <- clean_temp_df_all %>%
+  filter(year > 2009)
+
+temp_plot_10 <- clean_temp_df_10 %>%
+  ggplot() +
+#  geom_vline(xintercept = 2020, color = "red", size = 1.2, alpha = .8) +
+  geom_point(aes(x = date, y = max), size = .1, alpha = .05, color = "red") +
+  geom_point(aes(x = date, y = min), size = .1, alpha = .05, color = "orange") +
+#  geom_smooth(aes(x = date, y = max), color = "red") +
+#  geom_smooth(aes(x = date, y = min), color = "orange") +
+  facet_wrap(vars(city_name)) +
+  theme_classic() + ylab("Max and Min Temp (C)") + xlab("Year")
+
+temp_plot_10  
+```
+
+
+
+
 Full Rainfall Plot
 
 ```{r}
@@ -329,6 +353,71 @@ rain_plot_full <- clean_rain_df_all %>%
   facet_wrap(vars(city_name)) +
   theme_classic() + ylab("Rainfall (cm)")
 rain_plot_full
+```
+
+
+Rainfall (Last 10 Years)
+
+```{r}
+clean_rain_df_10 <- clean_rain_df_all %>%
+  filter(year > 2009)
+
+rain_plot_10 <- clean_rain_df_10 %>%
+  ggplot() +
+  geom_point(aes(x = date, y = rainfall), color = "blue", alpha = .05, size = .1) +
+  facet_wrap(vars(city_name)) +
+  theme_classic() + ylab("Rainfall (cm)")
+rain_plot_10
+```
+
+Restrict temperature and rainfall to last 10 years with trend lines added
+
+Temperature:
+
+```{r}
+temp_plot_10 <- clean_temp_df_10 %>%
+  ggplot() +
+  geom_point(aes(x = date, y = max), size = .1, alpha = .05, color = "red") +
+  geom_point(aes(x = date, y = min), size = .1, alpha = .05, color = "orange") +
+  geom_smooth(aes(date, max), color = "red") +
+  geom_smooth(aes(date, min), color = "orange") +
+  facet_wrap(vars(city_name)) +
+  theme_classic() + ylab("Max and Min Temp (C)") + xlab("Year")
+
+temp_plot_10 
+```
+
+Rainfall
+
+```{r}
+rain_plot_10 <- clean_rain_df_10 %>%
+  ggplot() +
+  geom_point(aes(x = date, y = rainfall), color = "blue", alpha = .05, size = .1) + 
+  geom_smooth(aes(x = date, y = rainfall), color = "black") +
+  facet_wrap(vars(city_name)) +
+  theme_classic() + ylab("Rainfall (cm)")
+rain_plot_10
+```
+
+Trying Rainfall of last 10 years with monthly totals:
+
+```{r}
+clean_rain_df_3 <- rainfall %>%
+  filter(year > 2009) %>%
+  mutate(year_month = paste(year, month, sep = "-")) %>%
+  mutate(year_month = ym(year_month)) %>%
+  group_by(station_code, city_name, lat, long, station_name, year_month) %>%
+  summarize(monthly_rain = sum(rainfall)) 
+
+rain_plot_monthly <- clean_rain_df_3 %>%
+  ggplot() +
+  geom_point(aes(x = year_month, y = monthly_rain), 
+             color = "blue", alpha = .8, size = .1) + 
+  geom_smooth(aes(x = year_month, y = monthly_rain), color = "black") +
+  facet_wrap(vars(city_name)) +
+  theme_classic() + ylab("Monthly Rainfall (cm)")
+rain_plot_monthly
+
 ```
 
 
