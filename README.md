@@ -5,13 +5,17 @@ Dec. 14th, 2022
 
 ## *The Data*
 
-This data was pulled from...
+This data was pulled from tidy Tuesday. The files include locations, brightness, and a few other metrics of Australian wildfires recorded by NASA over two weeks at the end of 2019 and start of 2020. 
+
+There are also files on rainfall and temperature collected at weather stations around Australia. 
 
 ## *Australian Wildfires*
 
 The maps show...
 
-The faceted graphs show...
+The faceted temperature graphs show daily maximum and minimum temperatures (in degrees Celcius) at each weather station from 2010 to 2020. Seasonal variation patterns are clear. Trend lines were added with geom_smooth. This graph shows slight increases in temperature at most stations over the last ten years, but no major noticeable heatwave events.
+
+The faceted rainfall graphs show the monthly total rainfall (in centemeters) collected at each weather station from 2010 to 2020. These rainfall plots indicate that there were slightly decreases in monthly total rainfall in the years leading up to the fire events in the last week of 2019 and first week of 2020.
 
 ## *Notes*
 
@@ -25,13 +29,13 @@ Alison = map of the fire shapes in Australia
 prescribed burns vs a wildfire on the popup in the map
 
 Kate = time series of rainfall and temperature at different stations 
-- faceted plot based on stations
-- hpow climate change has made things worse 
+- faceted plots of rainfall and temperature data taken at different stations in Australia.
+- These figures show slight increases in temperature and slight decreases in rainfall over the last ten years.
 
 
-Keke = looking at scatter plot of long and lat of rainfall
-- percipitation 
-- table:  
+Keke = dashboard and table
+- table of field stations and locations 
+- Keke also did the bulk of the work setting up the dashboard, organizing figures, and making a dropdown menu for the different field station data
 
 
 
