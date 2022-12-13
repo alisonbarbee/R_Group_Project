@@ -30,6 +30,12 @@ library(lubridate)
 library(shiny)
 library(leaflet)
 library(DT)
+library(tigris)
+library(viridis)
+library(MAP)
+library(ozmaps)
+library(ggrepel)
+
 # Loading the data
 nasa_fire <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-07/MODIS_C6_Australia_and_New_Zealand_7d.csv')
 rainfall <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-07/rainfall.csv')
@@ -51,20 +57,24 @@ name_df <- tribble(
 
 Sidebar {.sidebar}
 ======================================================================
-Use the _Explore rainfall_ tab to explore the the rainfall by the major cities in Australia. The blue line on the time series plot shows long term trend of monthly rainfall. Click and drag on the time series plot to highlight the date and the corresponding monthly average rainfall. Search the data table to view date and the corresponding monthly rainfall. 
+Use the _Explore rainfall_ tab to explore the the rainfall by the major cities in Australia. The blue line on the time series plot shows long term trend of monthly rainfall. Click and drag on the time series plot to highlight the date and the corresponding monthly average rainfall. 
 
-Use the _Rain fall_ tab to explore the the temperature by the major cities in Australia. The red and yellow line shows the long term of minimum and maximum temperature trend. Click and drag on the time series plot to highlight the daily temperature.Search the data table to view the date and corresponding daily temperature
+Use the _Rain fall_ tab to explore the the temperature by the major cities in Australia. The red and yellow line shows long term trend of minimum and maximum temperature. Search the data table to view the date and corresponding daily temperature.
 
-Application Authors: Alison, Kate, Keke
+Use the _Maps_ tab to explore wild fire in the week of December 29th, 2019 in Australia.The red dots indicates the fire, with the blue dots indicating the weather stations. click on the map to highlight the weather station and view fire around the station.
+
+
+Application Authors: Alison Barbee, Kate Bazany, Chukwudi Keke
+
 
 Data source: (http://www.bom.gov.au/?ref=logo) Bureau of Metrology, Australia
+
 
 
 Rain fall
 =====================================================================
 
-
-Column {.tabset}
+Column
 ----------------------------------------------------------------------
 
 ### Rain fall plot
@@ -88,24 +98,10 @@ rain_plot_monthly <- clean_rain_df_3 %>%
 ggplotly(rain_plot_monthly)
 ```
 
-### Rainfall data table 
-
-```{r}
-clean_rain_df_3 %>%
-  rename(`station code` = station_code,
-         `city name` = city_name,
-         `station name` = station_name,
-          year = year_month,
-         longitude = long,
-         latitude = lat,
-           `monthly rain` = monthly_rain) %>%
-datatable()
-```
-
 Temperature
 ============================================================================
 
-Column {.tabset}
+Column {data-width=500}
 ----------------------------------------------------------------------
 
 ### Temperature plots
@@ -131,8 +127,11 @@ temp_plot_10 <- clean_temp_df_10 %>%
   facet_wrap(vars(city_name)) +
   theme_classic() + ylab("Max and Min Temp (C)") + xlab("Date (year)")
 
-ggplotly(temp_plot_10)
+temp_plot_10
 ```
+
+Column {data-width=350}
+----------------------------------------------------------------------
 
 ### Temperature data table 
 ```{r}
@@ -145,4 +144,60 @@ datatable()
 ```
 
 
+Maps
+============================================================================
 
+Column {data-width=350}
+----------------------------------------------------------------------
+```{r}
+aus_stations <- name_df %>%
+  dplyr::select(station_code, city_name, lat, long, station_name)
+
+aus_stations <- st_as_sf(aus_stations, coords = c("long", "lat")) %>%
+  st_set_crs(4283)
+
+# Creates the datasets that will be used for creating the ggplot and leaflet maps
+
+aus_fires1 <- nasa_fire %>%
+  dplyr::select(latitude, longitude, brightness, acq_date)
+
+aus_fires <- st_as_sf(aus_fires1, coords = c("longitude", "latitude")) %>%
+  st_set_crs(4283)
+
+oz_states <- ozmaps::ozmap_states
+
+ggplot() + 
+  geom_sf(data = oz_states) + 
+  geom_sf(data = aus_fires, colour = "red", shape = 17) +
+  geom_sf(data = aus_stations, colour = "darkgreen", fill = "springgreen", 
+          size = 3, shape = 22) + 
+  ggtitle("Australia Fires During the Week of Dec. 29th, 2019 - Jan. 5th, 2020") +
+  xlab("Longitude") + ylab("Latitiude") +
+  coord_sf() +
+  scale_colour_manual(values = c("fire" = "red", "stations" = "darkgreen"), name = NULL,
+                      guide = guide_legend(override.aes = list(shape = c(17, 22)))) +
+  theme_bw()
+```
+
+Column {data-width=650}
+----------------------------------------------------------------------
+
+### Weather stations
+
+```{r}
+#This code will generate a leaflet map of Australia which includes data points of all fires within a week as well as the weather stations
+
+leaflet() %>% 
+  addTiles() %>% 
+  setView(130, -25, zoom = 4) %>%
+  addMarkers(115.79, -31.96, popup = "Subiaco Wastewater Treatment Plant, Perth") %>%
+  addMarkers(138.6, -34.92, popup = "North Adelaide, Adelaide") %>%
+  addMarkers(153.05, -27.51, popup = "Greenslopes Private Hospital, Brisbane") %>%
+  addMarkers(153.04, -27.48, popup = "Brisbane Station, Brisbane") %>%
+  addMarkers(151.21, -33.86, popup = "Observatory Hill, Sydney") %>%
+  addMarkers(149.2, -35.31, popup = "Canberra Airport, Canberra") %>%
+  addMarkers(144.98, -37.83, popup = "Melbourne Botanical Gardens, Melbourne") %>%
+  addCircles(data = aus_fires1, color = "red", popup = "fire",
+             fillOpacity = 0.25, radius = 30000) 
+  
+```
