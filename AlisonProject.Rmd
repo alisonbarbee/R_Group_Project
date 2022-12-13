@@ -10,23 +10,33 @@ output: word_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+# R packages used throughout the document
 
-```{r, Alison}
-library(tidytuesdayR)
+library(plyr)
+library(dplyr)
+library(ggplot2)
+library(rgdal)
+library(tmap)
+library(ggmap)
+library(dplyr)
+library(ggspatial)
+library(rlang)
+library(broom)
+library(tidyverse)
+library(readxl)
+library(purrr)
+library(ozmaps)
 
 ```
-
 
 #Adding Wildfire Data
 
 ```{r, Kate}
 # Get the Data
+# WARNING: IF YOU USE THIS DATA PLEASE BE CAUTIOUS WITH INTERPRETATION
 
-rainfall <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-07/rainfall.csv')
-
-temperature <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-07/temperature.csv')
-
-# IF YOU USE THIS DATA PLEASE BE CAUTIOUS WITH INTERPRETATION
+library(tidytuesdayR)
 
 nasa_fire <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-07/MODIS_C6_Australia_and_New_Zealand_7d.csv')
 
@@ -49,31 +59,11 @@ tuesdata <- tidytuesdayR::tt_load(2020, week = 2)
 rainfall <- tuesdata$rainfall
 ```
 
-
-
 *Cleaning Data*
+
 ```{r}
 library(tidyverse)
 library(here)
-
-read_file_list <- list.files(here::here("2020", "2020-01-07")) %>% 
-  .[str_detect(., "tmax|tmin")]
-
-read_clean_temp_data <- function(file_name){
-  
-  temp_descrip <- if_else(str_detect(file_name, "min"), "min", "max")
-  
-  read_csv(here::here("2020", "2020-01-07", file_name)) %>% 
-    janitor::clean_names() %>% 
-    fill(site_name, site_number) %>% 
-    filter(!is.na(date)) %>% 
-    rename(temperature = contains("temp")) %>% 
-    mutate(temp_type = temp_descrip)  %>% 
-    mutate(city_name = word(site_name, 1)) %>%  
-    select(city_name, date, temperature, temp_type, site_name)
-  
-}
-
 
 # Get Clean Temp Data -----------------------------------------------------
 
@@ -99,79 +89,12 @@ name_df <- tribble(
   "086232", "Melbourne", -37.83, 144.98, "Melbourne Botanical Gardens"
 )
 
-read_precip_list <- list.files(here::here("2020", "2020-01-07")) %>% 
-  .[str_detect(., "IDCJ")]
-
-read_clean_precip_data <- function(file_name){
-  
-  read_csv(here::here("2020", "2020-01-07", file_name)) %>% 
-    janitor::clean_names() %>% 
-    select("station_code" = bureau_of_meteorology_station_number,
-           year, month, day,
-           "rainfall"= rainfall_amount_millimetres, 
-           "period" = period_over_which_rainfall_was_measured_days,
-           quality) %>% 
-    mutate(station_code = as.character(station_code)) %>% 
-    left_join(name_df, by = "station_code") %>% 
-    select(station_code, city_name, everything())
-  
-}
-
-
-# Get Clean Rain Data -----------------------------------------------------
-
-clean_rain_df <- read_precip_list %>% 
-  map(read_clean_precip_data) %>% 
-  bind_rows()
-
-write_csv(clean_rain_df, here::here("2020", "2020-01-07","rainfall.csv"))
-```
-
-
-```{r}
-library(plyr)
-library(dplyr)
-library(ggplot2)
-library(rgdal)
-library(tmap)
-library(ggmap)
-library(dplyr)
-library(ggspatial)
-library(rlang)
-library(broom)
-library(tidyverse)
-library(readxl)
-library(purrr)
-
-library(ozmaps)
-
-#Feel free to ignore the following code I was going to use for ggplot maps 
-# but didn't end up using
-
-url <- "http://www.rfs.nsw.gov.au/feeds/majorIncidents.json"
-
-fires <- st_read(url)
-
-fires
-
-mapview(fires)
-
-#' Hacky way to get rid of points within geometry collections
-fire_poly <- fires %>% 
-  st_buffer(dist = 0) %>% 
-  st_union(by_feature = TRUE)
-
-mapview(fire_poly)
-
-fires %>% 
-  mutate(pubdate = as.character(pubDate),
-         pubdate = as.Date(pubdate))
 ```
 
 Begin the process of making the maps on ggplot and leaflet
 
 ```{r}
-# creates the datatable for the Australian weather stations
+# creates the data table for the Australian weather stations
 library(sf)
 
 aus_stations <- name_df %>%
@@ -252,11 +175,12 @@ leaflet() %>%
 
 # Trying to add ClusterOptions to fire data points, but rendering time takes a long time
 
-leaflet() %>% 
-  addTiles() %>% 
-  setView(130, -25, zoom = 4) %>%
-  addMarkers(aus_fires1, lat = aus_fires1$latitude, lng = aus_fires1$longitude, 
-             markerClusterOptions())
+#leaflet() %>% 
+#  addTiles() %>% 
+#  setView(130, -25, zoom = 4) %>%
+#  addMarkers(aus_fires1, lat = aus_fires1$latitude, lng = aus_fires1$longitude, 
+#             markerClusterOptions())
+
 ```
 
 Below is the code for leaflet maps around the weather stations throughout Australia
