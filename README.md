@@ -5,9 +5,15 @@ Dec. 14th, 2022
 
 ## *The Data*
 
-This data was pulled from tidy Tuesday. The files include locations, brightness, and a few other metrics of Australian wildfires recorded by NASA over two weeks at the end of 2019 and start of 2020. 
+This data was pulled from tidy Tuesday. The data files that were used for the maps include locations, brightness, and a few other metrics of Australian wildfires recorded by NASA over two weeks at the end of 2019 and start of 2020. 
 
-There are also files on rainfall and temperature collected at weather stations around Australia. 
+There are also files on rainfall and temperature collected at weather stations around Australia.
+
+Rainfall data was sourced from weather stations in:
+  Subiaco, Sydney, Melbourne, Brisbane, Canberra, and Adelaide
+
+Temp min/max data was sourced from:
+  BoM Climate Data Online
 
 ## *Australian Wildfires*
 
@@ -42,4 +48,4 @@ Keke = dashboard and table
 ## *Links*
 
 
-The original GitHub repository:
+The original GitHub repository: <https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-01-07/readme.md>
