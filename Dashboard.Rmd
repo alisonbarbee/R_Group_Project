@@ -28,67 +28,78 @@ library(mapview)
 library(plotly)
 library(lubridate)
 library(shiny)
-clean_temp<-read_csv("clean_temp.csv")
-rain_df<-read_csv ("clean_rain_df_d.csv")
-rain_df<-unite(rain_df, col='date', c('year', 'month','day'), sep=',')
+library(leaflet)
+library(DT)
+# Loading the data
+nasa_fire <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-07/MODIS_C6_Australia_and_New_Zealand_7d.csv')
+rainfall <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-07/rainfall.csv')
+temperature <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-07/temperature.csv')
 url <- "http://www.rfs.nsw.gov.au/feeds/majorIncidents.json"
+
+name_df <- tribble(
+  ~station_code, ~city_name, ~lat, ~long, ~station_name,
+  "009151", "Perth", -31.96, 115.79, "Subiaco Wastewater Treatment Plant",
+  "023011", "Adelaide", -34.92, 138.6, "North Adelaide",
+  "040383", "Brisbane", -27.51, 153.05, "Greenslopes Private Hospital",
+  "040913", "Brisbane", -27.48, 153.04, "Brisbane",
+  "066062", "Sydney", -33.86, 151.21, "Observatory Hill",
+  "070351", "Canberra", -35.31, 149.2, "Canberra Airport",
+  "086232", "Melbourne", -37.83, 144.98, "Melbourne Botanical Gardens"
+)
 ```
 
 
-Inputs {.sidebar}
------------------------------------------------------------------------
+Sidebar {.sidebar}
+======================================================================
+Use the _Explore rainfall_ tab to explore the the rainfall by the major cities in Australia. The blue line on the time series plot shows long term trend of monthly rainfall. Click and drag on the time series plot to highlight the date and the corresponding monthly average rainfall. Search the data table to view date and the corresponding monthly rainfall. 
 
-```{r}
-selectInput("city_name", label = 'Select a city to display', 
-            choices =c("Adelaide", "Brisbane", "Melbourne",                                           "Perth","Sydney"))
+Use the _Rain fall_ tab to explore the the temperature by the major cities in Australia. The red and yellow line shows the long term of minimum and maximum temperature trend. Click and drag on the time series plot to highlight the daily temperature.Search the data table to view the date and corresponding daily temperature
 
-```
-Select a city to display 
-
-Use the _Explore city_ to explore Australia's wild fire for your chosen city in 2020.  
-
-Application Authors: Alison, Kate, Keke Chukwudi 
+Application Authors: Alison, Kate, Keke
 
 Data source: (http://www.bom.gov.au/?ref=logo) Bureau of Metrology, Australia
 
 
+Rain fall
+=====================================================================
 
-Column {data-width=650}
------------------------------------------------------------------------
+
+Column {.tabset}
+----------------------------------------------------------------------
 
 ### Rain fall plot
 
 ```{r}
-clean_rain_df<-rain_df %>%
-  mutate(date = ymd(date)) %>%
-  group_by(date = floor_date(date, 'month')) %>%
-dplyr::summarize(rainfall = sum(rainfall))
+clean_rain_df_3 <- rainfall %>%
+  filter(year > 2009) %>%
+  mutate(year_month = paste(year, month, sep = "-")) %>%
+  mutate(year_month = ym(year_month)) %>%
+  group_by(station_code, city_name, lat, long, station_name, year_month) %>%
+  dplyr::summarize(monthly_rain = sum(rainfall)) 
 
-rain_plot <- clean_rain_df %>%
-  ggplot(aes(x = date, y = rainfall)) +
-  geom_point(alpha = 0.5, size = 0.5) + geom_smooth() + ylab("Total monthly Rain (cm)") + ylim (0, 2000)
-
-ggplotly(rain_plot)
-```
-
-Column {data-width=350}
------------------------------------------------------------------------
-
-### Temperature plot
-
-```{r}
-temp_plot <- clean_temp %>%
+rain_plot_monthly <- clean_rain_df_3 %>%
   ggplot() +
-  geom_smooth(aes(x = date, y = max), color = "red") +
-  geom_smooth(aes(x = date, y = min), color = "orange") +
-  theme_classic() + ylab("Max and Min Temp (C)") + xlab("Year")
+  geom_point(aes(x = year_month, y = monthly_rain), 
+             color = "blue", alpha = .8, size = .1) + 
+  geom_smooth(aes(x = year_month, y = monthly_rain), color = "black") + facet_wrap(vars(city_name)) +
+  theme_classic() + ylab("Total Monthly Rainfall (cm)") + 
+  xlab("Date (year)")
 
-ggplotly(temp_plot)
+ggplotly(rain_plot_monthly)
 ```
 
-### Map of Australian wild fire 
+### Rainfall data table 
 
 ```{r}
-
+clean_rain_df_3 %>%
+  rename(`station code` = station_code,
+         `city name` = city_name,
+         `station name` = station_name,
+          year = year_month,
+         longitude = long,
+         latitude = lat,
+           `monthly rain` = monthly_rain) %>%
+datatable()
 ```
+
 
