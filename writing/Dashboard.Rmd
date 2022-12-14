@@ -1,5 +1,5 @@
 ---
-title: "Australian 2019-2020 Bushfires"
+title: "One Week of Australian Fires from 2019-2020"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -103,7 +103,7 @@ Temperature
 Column {data-width=500}
 ----------------------------------------------------------------------
 
-### Daily Maximum and Minimum Temperature (C) in Australia (2010 - 2020)
+### Daily Maximum and Minimum Temperatures (C) in Australia (2010 - 2020)
 
 ```{r}
 clean_temp_df <- temperature %>%
@@ -146,8 +146,11 @@ datatable()
 Maps
 ============================================================================
 
-Column {data-width=350}
+Column 
 ----------------------------------------------------------------------
+
+### Map of Wildfires (red) and field stations (blue) 
+
 ```{r}
 aus_stations <- name_df %>%
   dplyr::select(station_code, city_name, lat, long, station_name)
@@ -165,25 +168,6 @@ aus_fires <- st_as_sf(aus_fires1, coords = c("longitude", "latitude")) %>%
 
 oz_states <- ozmaps::ozmap_states
 
-ggplot() + 
-  geom_sf(data = oz_states) + 
-  geom_sf(data = aus_fires, colour = "red", shape = 17) +
-  geom_sf(data = aus_stations, colour = "darkgreen", fill = "springgreen", 
-          size = 3, shape = 22) + 
-  ggtitle("Australia Fires During the Week of Dec. 29th, 2019 - Jan. 5th, 2020") +
-  xlab("Longitude") + ylab("Latitiude") +
-  coord_sf() +
-  scale_colour_manual(values = c("fire" = "red", "stations" = "darkgreen"), name = NULL,
-                      guide = guide_legend(override.aes = list(shape = c(17, 22)))) +
-  theme_bw()
-```
-
-Column {data-width=650}
-----------------------------------------------------------------------
-
-### Weather stations
-
-```{r}
 #This code will generate a leaflet map of Australia which includes data points of all fires within a week as well as the weather stations
 
 leaflet() %>% 
