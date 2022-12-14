@@ -105,7 +105,7 @@ Temperature
 Column
 ----------------------------------------------------------------------
 
-### The red points are the daily recorded high temperature and the yellow points are the daily recorded low temperatures. The bold red and yellow lines show the general trend of high and low temperatures over time, made with geom_smooth. This graph shows slight increases in temperature at most stations over the last ten years, but no major noticeable heatwave events. 
+### The red points are the daily recorded high temperature and the yellow points are the daily recorded low temperatures. The bold red and yellow lines show the general trend of high and low temperatures over time, made with geom_smooth. This graph shows slight increases in temperature at most stations over the last ten years, as well as a heatwave in the last season leading up to the wildfire events of 2019 and 2020. 
 
 ```{r}
 clean_temp_df <- temperature %>%
