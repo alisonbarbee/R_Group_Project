@@ -33,7 +33,6 @@ library(DT)
 library(tigris)
 library(viridis)
 library(MAP)
-library(ozmaps)
 library(ggrepel)
 
 # Loading the data
@@ -71,13 +70,13 @@ Data source: (http://www.bom.gov.au/?ref=logo) Bureau of Metrology, Australia
 
 
 
-Rain fall
+Rainfall
 =====================================================================
 
 Column
 ----------------------------------------------------------------------
 
-### Rain fall plot
+### Monthly Total Rainfall in Australia (2010 - 2020)
 
 ```{r}
 clean_rain_df_3 <- rainfall %>%
@@ -104,7 +103,7 @@ Temperature
 Column {data-width=500}
 ----------------------------------------------------------------------
 
-### Temperature plots
+### Daily Maximum and Minimum Temperature (C) in Australia (2010 - 2020)
 
 ```{r}
 clean_temp_df <- temperature %>%
@@ -135,7 +134,7 @@ Column {data-width=350}
 
 ### Temperature data table 
 ```{r}
-clean_temp_df %>%
+clean_temp_df_10 %>%
   
   rename(`site name` = site_name,
          `city name` = city_name) %>%
