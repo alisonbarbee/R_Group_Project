@@ -172,7 +172,7 @@ oz_states <- ozmaps::ozmap_states
 
 leaflet() %>% 
   addTiles() %>% 
-  setView(130, -25, zoom = 4) %>%
+  setView(130, -25, zoom = 6) %>%
   addMarkers(115.79, -31.96, popup = "Subiaco Wastewater Treatment Plant, Perth") %>%
   addMarkers(138.6, -34.92, popup = "North Adelaide, Adelaide") %>%
   addMarkers(153.05, -27.51, popup = "Greenslopes Private Hospital, Brisbane") %>%
