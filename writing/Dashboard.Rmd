@@ -1,5 +1,5 @@
 ---
-title: "Austrailian wild fires"
+title: "Australian 2019-2020 Bushfires"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -61,7 +61,7 @@ Use the _Explore rainfall_ tab to explore the the rainfall by the major cities i
 
 Use the _Rain fall_ tab to explore the the temperature by the major cities in Australia. The red and yellow line shows long term trend of minimum and maximum temperature. Search the data table to view the date and corresponding daily temperature.
 
-Use the _Maps_ tab to explore wild fire in the week of December 29th, 2019 in Australia.The red dots indicates the fire, with the blue dots indicating the weather stations. click on the map to highlight the weather station and view fire around the station.
+Use the _Maps_ tab to explore a map of Australia that represents fire data collected from NASA records during the week of December 29th, 2019, to January 5th, 2020. The red circles on the map represent a 1km fire pixel which may not represent the actual location of the fire since one or more fires can be detected within the 1km pixel. The blue markers represent 7 weather stations around the country that tracked climate data, like temperature and rainfall, in 5 of the 6 states. click on the map to highlight the weather station and view locations of fires around the station during that week.
 
 
 Application Authors: Alison Barbee, Kate Bazany, Chukwudi Keke

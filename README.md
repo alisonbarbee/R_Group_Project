@@ -17,7 +17,9 @@ Temp min/max data was sourced from:
 
 ## *Australian Wildfires*
 
-The maps show...
+Australia had significant increases in temperatures and a prolonged drought which led to the devestating fires in December of 2019 that effected millions of the country's residents.
+
+The maps show fire data from the unprecedented fire season in Australian throughout the second half of 2019 into the beginning of 2020. The data was pulled from NASA records during the week of December 29th, 2019, to January 5th, 2020. The red circles on the map represent a 1km fire pixel which may not represent the actual location of the fire since one or more fires can be detected within the 1km pixel. The blue markers represent 7 weather stations around the country that tracked climate data, like temperature and rainfall, in 5 of the 6 states. 
 
 The faceted temperature graphs show daily maximum and minimum temperatures (in degrees Celcius) at each weather station from 2010 to 2020. Seasonal variation patterns are clear. Trend lines were added with geom_smooth. This graph shows slight increases in temperature at most stations over the last ten years, but no major noticeable heatwave events.
 
